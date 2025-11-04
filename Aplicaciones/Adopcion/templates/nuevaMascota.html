@@ -1,0 +1,67 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+        <h1 class="mb-4 text-center">Nueva Mascota</h1>
+
+        <form action="/guardarMascota" enctype="multipart/form-data" method="post" id="frm_nueva_mascota">
+            {% csrf_token %}
+
+            <label for="numero_serie_mas">Número de Serie:</label>
+            <input type="text" class="form-control" name="numero_serie_mas" id="numero_serie_mas" placeholder="Ingrese el número de serie" required><br>
+
+            <label for="nombre_mas">Nombre:</label>
+            <input type="text" class="form-control" name="nombre_mas" id="nombre_mas" placeholder="Ingrese el nombre de la mascota" required><br>
+
+            <label for="especie_mas">Especie:</label>
+            <input type="text" class="form-control" name="especie_mas" id="especie_mas" placeholder="Ej. Perro, Gato" required><br>
+
+            <label for="raza_mas">Raza:</label>
+            <input type="text" class="form-control" name="raza_mas" id="raza_mas" placeholder="Ingrese la raza"><br>
+
+            <label for="sexo_mas">Sexo:</label>
+            <select class="form-control" name="sexo_mas" id="sexo_mas" required>
+                <option value="">Seleccione...</option>
+                <option value="Macho">Macho</option>
+                <option value="Hembra">Hembra</option>
+            </select><br>
+
+            <label for="edad_mas">Edad (años):</label>
+            <input type="number" class="form-control" name="edad_mas" id="edad_mas" required><br>
+
+            <label for="peso_mas">Peso (kg):</label>
+            <input type="number" class="form-control" name="peso_mas" id="peso_mas" step="0.1" required><br>
+
+            <label for="estado_mas">Estado:</label>
+            <input type="text" class="form-control" name="estado_mas" id="estado_mas" placeholder="Disponible, Adoptado, etc." required><br>
+
+            <label for="foto_mas">Foto:</label>
+            <input type="file" name="foto_mas" id="foto_mas" class="form-control" required><br>
+
+            <button class="btn btn-success w-100" type="submit">Guardar Mascota</button>
+        </form>
+
+        <script>
+            $("#frm_nueva_mascota").validate({
+                rules:{
+                    nombre_mas:{required:true},
+                    especie_mas:{required:true},
+                    edad_mas:{required:true, number:true}
+                }
+            });
+        </script>
+
+        <script>
+            $("#foto_mas").fileinput({
+                language: "es",
+                allowedFileExtensions: ["jpg", "jpeg", "png"],
+                showCaption: false,
+                dropZoneEnabled: true,
+                showClose: false
+            });
+        </script>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}

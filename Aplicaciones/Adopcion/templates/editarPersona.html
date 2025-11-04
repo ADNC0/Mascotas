@@ -1,0 +1,50 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+        <h1 class="mb-4 text-center">Editar Persona</h1>
+
+        <form action="/procesarEdicionPersona/{{ personaEditar.id_per }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="nombre_per">Nombre:</label>
+            <input class="form-control" type="text" name="nombre_per" id="nombre_per" value="{{ personaEditar.nombre_per }}"><br>
+
+            <label for="apellido_per">Apellido:</label>
+            <input class="form-control" type="text" name="apellido_per" id="apellido_per" value="{{ personaEditar.apellido_per }}"><br>
+
+            <label for="telefono_per">Teléfono:</label>
+            <input class="form-control" type="text" name="telefono_per" id="telefono_per" value="{{ personaEditar.telefono_per }}"><br>
+
+            <label for="correo_per">Correo:</label>
+            <input class="form-control" type="email" name="correo_per" id="correo_per" value="{{ personaEditar.correo_per }}"><br>
+
+            <label for="direccion_per">Dirección:</label>
+            <input class="form-control" type="text" name="direccion_per" id="direccion_per" value="{{ personaEditar.direccion_per }}"><br>
+
+            <label for="documento_per">Documento actual:</label><br>
+            {% if personaEditar.documento_per %}
+                <a href="{{ personaEditar.documento_per.url }}" download>{{ personaEditar.documento_per.name }}</a><br>
+            {% else %}
+                Ninguno<br>
+            {% endif %}
+            <input type="file" name="documento_per" id="documento_per" class="form-control"><br>
+
+            <button class="btn btn-warning" type="submit"><i class="fa fa-pen"></i> Actualizar</button>
+            <a class="btn btn-outline-danger" href="/personas"><i class="fa fa-times"></i> Cancelar</a>
+        </form>
+
+        <script>
+            $("#documento_per").fileinput({
+                language: "es",
+                allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+                showCaption: false,
+                dropZoneEnabled: true,
+                showClose: false
+            });
+        </script>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}

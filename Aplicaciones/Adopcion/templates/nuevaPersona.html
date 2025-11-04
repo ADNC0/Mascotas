@@ -1,0 +1,59 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+        <h1 class="mb-4 text-center">Nueva Persona</h1>
+
+        <form action="/guardarPersona" enctype="multipart/form-data" method="post" id="frm_nueva_persona">
+            {% csrf_token %}
+
+            <label for="nombre_per">Nombre:</label>
+            <input type="text" class="form-control" name="nombre_per" id="nombre_per" placeholder="Ingrese el nombre" required><br>
+
+            <label for="apellido_per">Apellido:</label>
+            <input type="text" class="form-control" name="apellido_per" id="apellido_per" placeholder="Ingrese el apellido" required><br>
+
+            <label for="telefono_per">Teléfono:</label>
+            <input type="text" class="form-control" name="telefono_per" id="telefono_per" placeholder="Ingrese el teléfono" required><br>
+
+            <label for="correo_per">Correo:</label>
+            <input type="email" class="form-control" name="correo_per" id="correo_per" placeholder="Ingrese el correo electrónico" required><br>
+
+            <label for="direccion_per">Dirección:</label>
+            <input type="text" class="form-control" name="direccion_per" id="direccion_per" placeholder="Ingrese la dirección" required><br>
+
+            <label for="documento_per">Documento (PDF, DOCX, JPG):</label>
+            <input type="file" name="documento_per" id="documento_per" class="form-control" required><br>
+
+            <button class="btn btn-success w-100" type="submit">Guardar Persona</button>
+        </form>
+
+        <script>
+            $("#frm_nueva_persona").validate({
+                rules:{
+                    nombre_per:{required:true, minlength:3},
+                    apellido_per:{required:true},
+                    telefono_per:{required:true},
+                    correo_per:{required:true, email:true}
+                },
+                messages:{
+                    nombre_per:{required:"Campo obligatorio", minlength:"Mínimo 3 letras"},
+                    correo_per:{email:"Correo inválido"}
+                }
+            });
+        </script>
+
+        <script>
+            $("#documento_per").fileinput({
+                language: "es",
+                allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+                showCaption: false,
+                dropZoneEnabled: true,
+                showClose: false
+            });
+        </script>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}

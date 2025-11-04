@@ -1,0 +1,61 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+        <h1 class="mb-4 text-center">Registrar Nueva Adopción</h1>
+
+        <form action="/guardarAdopcion" enctype="multipart/form-data" method="post" id="frm_nueva_adopcion">
+            {% csrf_token %}
+
+            <label for="persona">Persona:</label>
+            <select class="form-control" name="persona" id="persona" required>
+                <option value="">Seleccione persona</option>
+                {% for p in personas %}
+                    <option value="{{ p.id_per }}">{{ p.nombre_per }} {{ p.apellido_per }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="mascota">Mascota:</label>
+            <select class="form-control" name="mascota" id="mascota" required>
+                <option value="">Seleccione mascota</option>
+                {% for m in mascotas %}
+                    <option value="{{ m.id_mas }}">{{ m.nombre_mas }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="fecha_ado">Fecha de Adopción:</label>
+            <input type="date" class="form-control" name="fecha_ado" id="fecha_ado" required><br>
+
+            <label for="documento_ado">Documento (PDF, DOC, JPG):</label>
+            <input type="file" name="documento_ado" id="documento_ado" class="form-control" required><br>
+
+            <label for="observacion_ado">Observación:</label>
+            <textarea class="form-control" name="observacion_ado" id="observacion_ado" rows="3" placeholder="Observaciones de la adopción..."></textarea><br>
+
+            <button class="btn btn-success w-100" type="submit">Guardar Adopción</button>
+        </form>
+
+        <script>
+            $("#frm_nueva_adopcion").validate({
+                rules:{
+                    persona:{required:true},
+                    mascota:{required:true},
+                    fecha_ado:{required:true}
+                }
+            });
+        </script>
+
+        <script>
+            $("#documento_ado").fileinput({
+                language: "es",
+                allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+                showCaption: false,
+                dropZoneEnabled: true,
+                showClose: false
+            });
+        </script>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}

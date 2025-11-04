@@ -1,0 +1,62 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-3"></div>
+    <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+        <h1 class="mb-4 text-center">Editar Mascota</h1>
+
+        <form action="/procesarEdicionMascota/{{ mascotaEditar.id_mas }}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="numero_serie_mas">Número de Serie:</label>
+            <input class="form-control" type="text" name="numero_serie_mas" id="numero_serie_mas" value="{{ mascotaEditar.numero_serie_mas }}"><br>
+
+            <label for="nombre_mas">Nombre:</label>
+            <input class="form-control" type="text" name="nombre_mas" id="nombre_mas" value="{{ mascotaEditar.nombre_mas }}"><br>
+
+            <label for="especie_mas">Especie:</label>
+            <input class="form-control" type="text" name="especie_mas" id="especie_mas" value="{{ mascotaEditar.especie_mas }}"><br>
+
+            <label for="raza_mas">Raza:</label>
+            <input class="form-control" type="text" name="raza_mas" id="raza_mas" value="{{ mascotaEditar.raza_mas }}"><br>
+
+            <label for="sexo_mas">Sexo:</label>
+            <select class="form-control" name="sexo_mas" id="sexo_mas">
+                <option value="Macho" {% if mascotaEditar.sexo_mas == 'Macho' %}selected{% endif %}>Macho</option>
+                <option value="Hembra" {% if mascotaEditar.sexo_mas == 'Hembra' %}selected{% endif %}>Hembra</option>
+            </select><br>
+
+            <label for="edad_mas">Edad:</label>
+            <input class="form-control" type="number" name="edad_mas" id="edad_mas" value="{{ mascotaEditar.edad_mas }}"><br>
+
+            <label for="peso_mas">Peso (kg):</label>
+            <input class="form-control" type="number" step="0.1" name="peso_mas" id="peso_mas" value="{{ mascotaEditar.peso_mas }}"><br>
+
+            <label for="estado_mas">Estado:</label>
+            <input class="form-control" type="text" name="estado_mas" id="estado_mas" value="{{ mascotaEditar.estado_mas }}"><br>
+
+            <label for="foto_mas">Foto actual:</label><br>
+            {% if mascotaEditar.foto_mas %}
+                <img src="{{ mascotaEditar.foto_mas.url }}" alt="foto" height="100"><br>
+            {% else %}
+                Ninguna<br>
+            {% endif %}
+            <input type="file" name="foto_mas" id="foto_mas" class="form-control"><br>
+
+            <button class="btn btn-warning" type="submit"><i class="fa fa-pen"></i> Actualizar</button>
+            <a class="btn btn-outline-danger" href="/mascotas"><i class="fa fa-times"></i> Cancelar</a>
+        </form>
+
+        <script>
+            $("#foto_mas").fileinput({
+                language: "es",
+                allowedFileExtensions: ["jpg", "jpeg", "png"],
+                showCaption: false,
+                dropZoneEnabled: true,
+                showClose: false
+            });
+        </script>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+{% endblock %}
