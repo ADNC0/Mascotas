@@ -27,6 +27,8 @@ class Mascota(models.Model):
     foto_mas = models.ImageField(upload_to='fotos_mascotas/', null=True, blank=True)
     historial_mas = models.TextField(null=True, blank=True)
     estado_mas = models.CharField(max_length=20)
+    fecha_registro_mas = models.DateField(auto_now_add=True)  
+
 
     def __str__(self):
         return self.nombre_mas
