@@ -5,55 +5,104 @@
     <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
         <h1 class="mb-4 text-center">Nueva Persona</h1>
 
-        <form action="/guardarPersona" enctype="multipart/form-data" method="post" id="frm_nueva_persona">
+        <form action="/guardarPersona" enctype="multipart/form-data" method="post" id="frm_nueva_persona" novalidate>
             {% csrf_token %}
 
+            <!-- NOMBRE -->
             <label for="nombre_per">Nombre:</label>
-            <input type="text" class="form-control" name="nombre_per" id="nombre_per" placeholder="Ingrese el nombre" required><br>
+            <input type="text" class="form-control" name="nombre_per" id="nombre_per"
+                   placeholder="Ingrese el nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+                   title="El nombre solo puede contener letras y espacios.">
+            <small id="error_nombre" class="text-danger"></small><br>
 
+            <!-- APELLIDO -->
             <label for="apellido_per">Apellido:</label>
-            <input type="text" class="form-control" name="apellido_per" id="apellido_per" placeholder="Ingrese el apellido" required><br>
+            <input type="text" class="form-control" name="apellido_per" id="apellido_per"
+                   placeholder="Ingrese el apellido" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+                   title="El apellido solo puede contener letras y espacios.">
+            <small id="error_apellido" class="text-danger"></small><br>
 
+            <!-- TELÉFONO -->
             <label for="telefono_per">Teléfono:</label>
-            <input type="text" class="form-control" name="telefono_per" id="telefono_per" placeholder="Ingrese el teléfono" required><br>
+            <input type="text" class="form-control" name="telefono_per" id="telefono_per"
+                   placeholder="Ingrese el teléfono" required pattern="^[0-9]+$"
+                   title="El teléfono solo puede contener números.">
+            <small id="error_telefono" class="text-danger"></small><br>
 
+            <!-- CORREO -->
             <label for="correo_per">Correo:</label>
-            <input type="email" class="form-control" name="correo_per" id="correo_per" placeholder="Ingrese el correo electrónico" required><br>
+            <input type="email" class="form-control" name="correo_per" id="correo_per"
+                   placeholder="Ingrese el correo electrónico" required>
+            <small id="error_correo" class="text-danger"></small><br>
 
+            <!-- DIRECCIÓN -->
             <label for="direccion_per">Dirección:</label>
-            <input type="text" class="form-control" name="direccion_per" id="direccion_per" placeholder="Ingrese la dirección" required><br>
+            <input type="text" class="form-control" name="direccion_per" id="direccion_per"
+                   placeholder="Ingrese la dirección" required><br>
 
+            <!-- DOCUMENTO -->
             <label for="documento_per">Documento (PDF, DOCX, JPG):</label>
-            <input type="file" name="documento_per" id="documento_per" class="form-control" required><br>
+            <input type="file" name="documento_per" id="documento_per" class="form-control" required
+                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"><br>
 
             <button class="btn btn-success w-100" type="submit">Guardar Persona</button>
+            <a class="btn btn-outline-danger w-100 mt-2" href="/persona">Cancelar</a>
         </form>
-
-        <script>
-            $("#frm_nueva_persona").validate({
-                rules:{
-                    nombre_per:{required:true, minlength:3},
-                    apellido_per:{required:true},
-                    telefono_per:{required:true},
-                    correo_per:{required:true, email:true}
-                },
-                messages:{
-                    nombre_per:{required:"Campo obligatorio", minlength:"Mínimo 3 letras"},
-                    correo_per:{email:"Correo inválido"}
-                }
-            });
-        </script>
-
-        <script>
-            $("#documento_per").fileinput({
-                language: "es",
-                allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
-                showCaption: false,
-                dropZoneEnabled: true,
-                showClose: false
-            });
-        </script>
     </div>
     <div class="col-md-3"></div>
 </div>
+
+<!-- ============ VALIDACIÓN FRONTEND ============ -->
+<script>
+    const form = document.getElementById("frm_nueva_persona");
+
+    form.addEventListener("submit", function (e) {
+        let valido = true;
+
+        const nombre = document.getElementById("nombre_per");
+        const apellido = document.getElementById("apellido_per");
+        const telefono = document.getElementById("telefono_per");
+        const correo = document.getElementById("correo_per");
+
+        // Limpiar mensajes previos
+        document.querySelectorAll("small.text-danger").forEach(el => el.textContent = "");
+
+        // Nombre solo letras
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre.value)) {
+            document.getElementById("error_nombre").textContent = "Solo se permiten letras.";
+            valido = false;
+        }
+
+        // Apellido solo letras
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellido.value)) {
+            document.getElementById("error_apellido").textContent = "Solo se permiten letras.";
+            valido = false;
+        }
+
+        // Teléfono solo números
+        if (!/^[0-9]+$/.test(telefono.value)) {
+            document.getElementById("error_telefono").textContent = "Solo se permiten números.";
+            valido = false;
+        }
+
+        // Correo válido
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.value)) {
+            document.getElementById("error_correo").textContent = "Ingrese un correo válido.";
+            valido = false;
+        }
+
+        if (!valido) e.preventDefault(); // Evita enviar si hay errores
+    });
+</script>
+
+<!-- Validación visual de archivos -->
+<script>
+    $("#documento_per").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
 {% endblock %}

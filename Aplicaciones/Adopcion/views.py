@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db import IntegrityError
 from django.db.models import Count
 from .models import Persona, Mascota, Adopcion
 
@@ -22,15 +23,23 @@ def guardarPersona(request):
     direccion = request.POST.get("direccion_per")
     documento = request.FILES.get("documento_per")
 
-    Persona.objects.create(
-        nombre_per=nombre,
-        apellido_per=apellido,
-        telefono_per=telefono,
-        correo_per=correo,
-        direccion_per=direccion,
-        documento_per=documento
-    )
-    messages.success(request, "Persona guardada exitosamente")
+    # ✅ Validar si el correo ya existe
+    if Persona.objects.filter(correo_per=correo).exists():
+        messages.error(request, "❌ El correo ingresado ya está registrado. Intente con otro.")
+        return redirect('/nuevaPersona')
+
+    try:
+        Persona.objects.create(
+            nombre_per=nombre,
+            apellido_per=apellido,
+            telefono_per=telefono,
+            correo_per=correo,
+            direccion_per=direccion,
+            documento_per=documento
+        )
+        messages.success(request, "✅ Persona guardada exitosamente")
+    except IntegrityError:
+        messages.error(request, "Ocurrió un error al guardar la persona. Verifique los datos.")
     return redirect('/persona')
 
 

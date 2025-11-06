@@ -5,20 +5,27 @@
     <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
         <h1 class="mb-4 text-center">Nueva Mascota</h1>
 
-        <form action="/guardarMascota" enctype="multipart/form-data" method="post" id="frm_nueva_mascota">
+        <form action="/guardarMascota" enctype="multipart/form-data" method="post" id="frm_nueva_mascota" novalidate>
             {% csrf_token %}
 
             <label for="numero_serie_mas">Número de Serie:</label>
-            <input type="text" class="form-control" name="numero_serie_mas" id="numero_serie_mas" placeholder="Ingrese el número de serie" required><br>
+            <input type="text" class="form-control" name="numero_serie_mas" id="numero_serie_mas" placeholder="Ingrese el número de serie" required>
+            <small id="error_serie" class="text-danger"></small><br>
 
             <label for="nombre_mas">Nombre:</label>
-            <input type="text" class="form-control" name="nombre_mas" id="nombre_mas" placeholder="Ingrese el nombre de la mascota" required><br>
+            <input type="text" class="form-control" name="nombre_mas" id="nombre_mas" placeholder="Ingrese el nombre de la mascota"
+                   pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" required title="Solo se permiten letras.">
+            <small id="error_nombre" class="text-danger"></small><br>
 
             <label for="especie_mas">Especie:</label>
-            <input type="text" class="form-control" name="especie_mas" id="especie_mas" placeholder="Ej. Perro, Gato" required><br>
+            <input type="text" class="form-control" name="especie_mas" id="especie_mas" placeholder="Ej. Perro, Gato"
+                   pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$" required title="Solo se permiten letras.">
+            <small id="error_especie" class="text-danger"></small><br>
 
             <label for="raza_mas">Raza:</label>
-            <input type="text" class="form-control" name="raza_mas" id="raza_mas" placeholder="Ingrese la raza"><br>
+            <input type="text" class="form-control" name="raza_mas" id="raza_mas" placeholder="Ingrese la raza"
+                   pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]*$" title="Solo se permiten letras.">
+            <small id="error_raza" class="text-danger"></small><br>
 
             <label for="sexo_mas">Sexo:</label>
             <select class="form-control" name="sexo_mas" id="sexo_mas" required>
@@ -28,40 +35,85 @@
             </select><br>
 
             <label for="edad_mas">Edad (años):</label>
-            <input type="number" class="form-control" name="edad_mas" id="edad_mas" required><br>
+            <input type="number" class="form-control" name="edad_mas" id="edad_mas" min="0" max="30" required>
+            <small id="error_edad" class="text-danger"></small><br>
 
             <label for="peso_mas">Peso (kg):</label>
-            <input type="number" class="form-control" name="peso_mas" id="peso_mas" step="0.1" required><br>
+            <input type="number" class="form-control" name="peso_mas" id="peso_mas" min="0.1" step="0.1" required>
+            <small id="error_peso" class="text-danger"></small><br>
 
             <label for="estado_mas">Estado:</label>
-            <input type="text" class="form-control" name="estado_mas" id="estado_mas" placeholder="Disponible, Adoptado, etc." required><br>
+            <input type="text" class="form-control" name="estado_mas" id="estado_mas" placeholder="Ej. Disponible, Adoptado" required><br>
 
             <label for="foto_mas">Foto:</label>
-            <input type="file" name="foto_mas" id="foto_mas" class="form-control" required><br>
+            <input type="file" name="foto_mas" id="foto_mas" class="form-control" accept=".jpg,.jpeg,.png" required><br>
 
             <button class="btn btn-success w-100" type="submit">Guardar Mascota</button>
+            <a class="btn btn-outline-danger w-100 mt-2" href="/mascota">Cancelar</a>
         </form>
-
-        <script>
-            $("#frm_nueva_mascota").validate({
-                rules:{
-                    nombre_mas:{required:true},
-                    especie_mas:{required:true},
-                    edad_mas:{required:true, number:true}
-                }
-            });
-        </script>
-
-        <script>
-            $("#foto_mas").fileinput({
-                language: "es",
-                allowedFileExtensions: ["jpg", "jpeg", "png"],
-                showCaption: false,
-                dropZoneEnabled: true,
-                showClose: false
-            });
-        </script>
     </div>
     <div class="col-md-3"></div>
 </div>
+
+<!-- ============ VALIDACIÓN FRONTEND ============ -->
+<script>
+    const form = document.getElementById("frm_nueva_mascota");
+
+    form.addEventListener("submit", function (e) {
+        let valido = true;
+
+        // Limpia mensajes previos
+        document.querySelectorAll("small.text-danger").forEach(el => el.textContent = "");
+
+        const serie = document.getElementById("numero_serie_mas");
+        const nombre = document.getElementById("nombre_mas");
+        const especie = document.getElementById("especie_mas");
+        const raza = document.getElementById("raza_mas");
+        const edad = document.getElementById("edad_mas");
+        const peso = document.getElementById("peso_mas");
+
+        // Serie alfanumérica (no vacía)
+        if (!/^[A-Za-z0-9-]+$/.test(serie.value)) {
+            document.getElementById("error_serie").textContent = "Solo letras, números o guiones.";
+            valido = false;
+        }
+
+        // Nombre solo letras
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre.value)) {
+            document.getElementById("error_nombre").textContent = "Solo se permiten letras.";
+            valido = false;
+        }
+
+        // Especie solo letras
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(especie.value)) {
+            document.getElementById("error_especie").textContent = "Solo se permiten letras.";
+            valido = false;
+        }
+
+        // Edad positiva
+        if (edad.value <= 0) {
+            document.getElementById("error_edad").textContent = "Debe ingresar una edad válida.";
+            valido = false;
+        }
+
+        // Peso positivo
+        if (peso.value <= 0) {
+            document.getElementById("error_peso").textContent = "Debe ingresar un peso válido.";
+            valido = false;
+        }
+
+        if (!valido) e.preventDefault(); // evita enviar si hay errores
+    });
+</script>
+
+<!-- Configuración del input de imagen -->
+<script>
+    $("#foto_mas").fileinput({
+        language: "es",
+        allowedFileExtensions: ["jpg", "jpeg", "png"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+    });
+</script>
 {% endblock %}
