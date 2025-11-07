@@ -8,6 +8,41 @@ from .models import Persona, Mascota, Adopcion
 
 # ===== PERSONA =====
 =======
+from django.template.loader import get_template
+from django.http import HttpResponse
+from xhtml2pdf import pisa
+
+def generar_reporte_dashboard(request):
+    total_adopciones = Adopcion.objects.count()
+    total_personas = Persona.objects.count()
+    total_mascotas = Mascota.objects.count()
+
+    especies_adoptadas = Adopcion.objects.values('mascota__especie_mas').annotate(total=Count('id_ado')).order_by('-total')
+    especie_mas_adoptada = especies_adoptadas[0]['mascota__especie_mas'] if especies_adoptadas else 'Sin registros'
+
+    promedio_edad = Mascota.objects.filter(estado_mas__iexact='Adoptado').aggregate(promedio=Avg('edad_mas'))['promedio']
+    promedio_peso = Mascota.objects.filter(estado_mas__iexact='Adoptado').aggregate(promedio=Avg('peso_mas'))['promedio']
+
+    context = {
+        'total_adopciones': total_adopciones,
+        'total_personas': total_personas,
+        'total_mascotas': total_mascotas,
+        'especie_mas_adoptada': especie_mas_adoptada,
+        'promedio_edad': round(promedio_edad, 2) if promedio_edad else 0,
+        'promedio_peso': round(promedio_peso, 2) if promedio_peso else 0,
+    }
+
+    template = get_template('reporte_dashboard.html')
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_dashboard.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('Error generando el PDF', status=400)
+    return response
+
 from django.db.models import Count, Avg
 
 def dashboard(request):

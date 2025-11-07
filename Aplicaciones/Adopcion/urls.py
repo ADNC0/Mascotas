@@ -7,6 +7,9 @@ urlpatterns = [
 
     path('dashboard/', views.dashboard, name='dashboard'),
 
+    path('reporte_dashboard/', views.generar_reporte_dashboard, name='reporte_dashboard'),
+
+
 >>>>>>> master
     # PERSONAS
     path('', views.persona),

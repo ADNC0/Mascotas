@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 13px; }
+    h2, h3 { text-align: center; }
+    .resumen {
+      margin-top: 20px;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .resumen th, .resumen td {
+      border: 1px solid #000;
+      padding: 8px;
+      text-align: center;
+    }
+    .resumen th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>🐾 Reporte General del Dashboard</h2>
+  <h3>Centro de Adopciones</h3>
+
+  <table class="resumen">
+    <tr>
+      <th>Total Adopciones</th>
+      <th>Total Personas</th>
+      <th>Total Mascotas</th>
+    </tr>
+    <tr>
+      <td>{{ total_adopciones }}</td>
+      <td>{{ total_personas }}</td>
+      <td>{{ total_mascotas }}</td>
+    </tr>
+  </table>
+
+  <h3>📈 Datos destacados</h3>
+  <table class="resumen">
+    <tr>
+      <th>Especie más adoptada</th>
+      <th>Promedio de edad (años)</th>
+      <th>Promedio de peso (kg)</th>
+    </tr>
+    <tr>
+      <td>{{ especie_mas_adoptada }}</td>
+      <td>{{ promedio_edad }}</td>
+      <td>{{ promedio_peso }}</td>
+    </tr>
+  </table>
+
+  <p style="text-align:center; margin-top: 20px;">Reporte generado automáticamente por el sistema Django 🐶</p>
+</body>
+</html>
