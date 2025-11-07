@@ -1,0 +1,164 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+    <h1 class="mb-4 text-center">Editar Mascota</h1>
+
+    <form action="/procesarEdicionMascota/{{ mascotaEditar.id_mas }}" 
+          method="post" enctype="multipart/form-data" id="frm_editar_mascota">
+      {% csrf_token %}
+
+      <label for="numero_serie_mas">Número de Serie:</label>
+      <input class="form-control" type="text" name="numero_serie_mas" id="numero_serie_mas" 
+             value="{{ mascotaEditar.numero_serie_mas }}" required><br>
+
+      <label for="nombre_mas">Nombre:</label>
+      <input class="form-control" type="text" name="nombre_mas" id="nombre_mas" 
+             value="{{ mascotaEditar.nombre_mas }}" required><br>
+
+      <label for="especie_mas">Especie:</label>
+      <input class="form-control" type="text" name="especie_mas" id="especie_mas" 
+             value="{{ mascotaEditar.especie_mas }}" required><br>
+
+      <label for="raza_mas">Raza:</label>
+      <input class="form-control" type="text" name="raza_mas" id="raza_mas" 
+             value="{{ mascotaEditar.raza_mas }}"><br>
+
+      <label for="sexo_mas">Sexo:</label>
+      <select class="form-control" name="sexo_mas" id="sexo_mas" required>
+        <option value="">Seleccione...</option>
+        <option value="Macho" {% if mascotaEditar.sexo_mas == 'Macho' %}selected{% endif %}>Macho</option>
+        <option value="Hembra" {% if mascotaEditar.sexo_mas == 'Hembra' %}selected{% endif %}>Hembra</option>
+      </select><br>
+
+      <label for="edad_mas">Edad:</label>
+      <input class="form-control" type="number" name="edad_mas" id="edad_mas" 
+             value="{{ mascotaEditar.edad_mas }}" required><br>
+
+      <label for="peso_mas">Peso (kg):</label>
+      <input class="form-control" type="number" step="0.1" name="peso_mas" id="peso_mas" 
+             value="{{ mascotaEditar.peso_mas }}" required><br>
+
+      <label for="estado_mas">Estado:</label>
+      <input class="form-control" type="text" name="estado_mas" id="estado_mas" 
+             value="{{ mascotaEditar.estado_mas }}" required><br>
+
+      <label for="foto_mas">Foto actual:</label><br>
+      {% if mascotaEditar.foto_mas %}
+        <img src="{{ mascotaEditar.foto_mas.url }}" alt="foto" class="rounded mb-2" height="100"><br>
+      {% else %}
+        Ninguna<br>
+      {% endif %}
+      <input type="file" name="foto_mas" id="foto_mas" class="form-control"><br>
+
+      <button class="btn btn-warning w-100" type="submit" id="btn_actualizar">
+        <i class="fa fa-pen"></i> Actualizar
+      </button>
+      <a class="btn btn-outline-danger w-100 mt-2" href="/mascota">
+        <i class="fa fa-times"></i> Cancelar
+      </a>
+    </form>
+
+    <!-- jQuery Validate -->
+    <script>
+      $("#frm_editar_mascota").validate({
+        rules: {
+          numero_serie_mas: {
+            required: true,
+            digits: true
+          },
+          nombre_mas: {
+            required: true,
+            lettersonly: true
+          },
+          especie_mas: {
+            required: true,
+            lettersonly: true
+          },
+          edad_mas: {
+            required: true,
+            number: true,
+            min: 0
+          },
+          peso_mas: {
+            required: true,
+            number: true,
+            min: 0
+          },
+          estado_mas: {
+            required: true,
+            lettersonly: true
+          }
+        },
+        messages: {
+          numero_serie_mas: {
+            required: "Ingrese el número de serie",
+            digits: "Solo se permiten números"
+          },
+          nombre_mas: {
+            required: "Ingrese el nombre de la mascota",
+            lettersonly: "Solo se permiten letras"
+          },
+          especie_mas: {
+            required: "Ingrese la especie",
+            lettersonly: "Solo se permiten letras"
+          },
+          edad_mas: {
+            required: "Ingrese la edad",
+            number: "Debe ser un número válido"
+          },
+          peso_mas: {
+            required: "Ingrese el peso",
+            number: "Debe ser un número válido"
+          },
+          estado_mas: {
+            required: "Ingrese el estado",
+            lettersonly: "Solo se permiten letras"
+          }
+        },
+        errorClass: "text-danger"
+      });
+
+      // Método para solo letras
+      jQuery.validator.addMethod("lettersonly", function(value, element) {
+        return this.optional(element) || /^[a-zA-ZÀ-ÿ\s]+$/.test(value);
+      }, "Solo se permiten letras");
+    </script>
+
+    <!-- SweetAlert para confirmar actualización -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.getElementById("frm_editar_mascota").addEventListener("submit", function(e) {
+        e.preventDefault();
+        if ($("#frm_editar_mascota").valid()) {
+          Swal.fire({
+            title: "¿Guardar cambios?",
+            text: "Se actualizará la información de la mascota.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, actualizar",
+            cancelButtonText: "Cancelar"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.submit();
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- Fileinput -->
+    <script>
+      $("#foto_mas").fileinput({
+        language: "es",
+        allowedFileExtensions: ["jpg", "jpeg", "png"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+      });
+    </script>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+{% endblock %}

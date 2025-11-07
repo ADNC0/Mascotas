@@ -1,0 +1,112 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+    <h1 class="mb-4 text-center">Editar Adopción</h1>
+
+    <form action="/procesarEdicionAdopcion/{{ adopcionEditar.id_ado }}" 
+          method="post" enctype="multipart/form-data" id="frm_editar_adopcion">
+      {% csrf_token %}
+
+      <label for="persona">Persona:</label>
+      <select class="form-control" name="persona" id="persona" required>
+        {% for p in personas %}
+          <option value="{{ p.id_per }}" 
+            {% if adopcionEditar.persona.id_per == p.id_per %}selected{% endif %}>
+            {{ p.nombre_per }} {{ p.apellido_per }}
+          </option>
+        {% endfor %}
+      </select><br>
+
+      <label for="mascota">Mascota:</label>
+      <select class="form-control" name="mascota" id="mascota" required>
+        {% for m in mascotas %}
+          <option value="{{ m.id_mas }}" 
+            {% if adopcionEditar.mascota.id_mas == m.id_mas %}selected{% endif %}>
+            {{ m.nombre_mas }}
+          </option>
+        {% endfor %}
+      </select><br>
+
+      <label for="fecha_ado">Fecha de Adopción:</label>
+      <input class="form-control" type="date" name="fecha_ado" id="fecha_ado" 
+             value="{{ adopcionEditar.fecha_ado|date:'Y-m-d' }}" required><br>
+
+      <label for="documento_ado">Documento actual:</label><br>
+      {% if adopcionEditar.documento_ado %}
+        <a href="{{ adopcionEditar.documento_ado.url }}" download>
+          {{ adopcionEditar.documento_ado.name }}
+        </a><br>
+      {% else %}
+        Ninguno<br>
+      {% endif %}
+      <input type="file" name="documento_ado" id="documento_ado" class="form-control"><br>
+
+      <label for="observacion_ado">Observación:</label>
+      <textarea class="form-control" name="observacion_ado" id="observacion_ado" rows="3">
+        {{ adopcionEditar.observacion_ado }}
+      </textarea><br>
+
+      <button class="btn btn-warning w-100" type="submit" id="btn_guardar">
+        <i class="fa fa-pen"></i> Actualizar
+      </button>
+      <a class="btn btn-outline-danger w-100 mt-2" href="/adopcion">
+        <i class="fa fa-times"></i> Cancelar
+      </a>
+    </form>
+
+    <!-- jQuery Validate -->
+    <script>
+      $("#frm_editar_adopcion").validate({
+        rules: {
+          persona: { required: true },
+          mascota: { required: true },
+          fecha_ado: { required: true }
+        },
+        messages: {
+          persona: { required: "Debe seleccionar una persona" },
+          mascota: { required: "Debe seleccionar una mascota" },
+          fecha_ado: { required: "Debe ingresar la fecha" }
+        },
+        errorClass: "text-danger"
+      });
+    </script>
+
+    <!-- SweetAlert para confirmar antes de enviar -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+      document.getElementById("frm_editar_adopcion").addEventListener("submit", function(e) {
+        e.preventDefault();
+        if ($("#frm_editar_adopcion").valid()) {
+          Swal.fire({
+            title: "¿Guardar cambios?",
+            text: "Se actualizará la información de la adopción.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, actualizar",
+            cancelButtonText: "Cancelar"
+          }).then((result) => {
+            if (result.isConfirmed) {
+              this.submit();
+            }
+          });
+        }
+      });
+    </script>
+
+    <!-- Fileinput -->
+    <script>
+      $("#documento_ado").fileinput({
+        language: "es",
+        allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+        showCaption: false,
+        dropZoneEnabled: true,
+        showClose: false
+      });
+    </script>
+
+  </div>
+  <div class="col-md-3"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-4">📊 Dashboard de Adopciones</h1>
+
+    <!-- Tarjetas de resumen -->
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success text-white shadow-sm p-3">
+                <h3>Total Adopciones</h3>
+                <p class="fs-3">{{ total_adopciones }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-primary text-white shadow-sm p-3">
+                <h3>Total Personas</h3>
+                <p class="fs-3">{{ total_personas }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark shadow-sm p-3">
+                <h3>Total Mascotas</h3>
+                <p class="fs-3">{{ total_mascotas }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico -->
+    <div class="card shadow-sm p-4">
+        <h4 class="text-center mb-3">🐾 Mascotas registradas por especie</h4>
+        <canvas id="graficoEspecies"></canvas>
+    </div>
+</div>
+
+<!-- Importamos Chart.js (usa CDN oficial) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('graficoEspecies');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ labels|safe }},
+            datasets: [{
+                label: 'Cantidad de Mascotas',
+                data: {{ data|safe }},
+                borderWidth: 1,
+                backgroundColor: ['#4e79a7', '#f28e2b', '#e15759', '#76b7b2', '#59a14f', '#edc948']
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
+
+{% endblock %}

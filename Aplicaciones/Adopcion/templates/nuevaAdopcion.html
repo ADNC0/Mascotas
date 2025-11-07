@@ -1,0 +1,118 @@
+{% extends './plantilla.html' %}
+{% block contenido %}
+<div class="row">
+  <div class="col-md-3"></div>
+  <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
+    <h1 class="mb-4 text-center">Registrar Nueva Adopción</h1>
+
+    <form action="/guardarAdopcion" enctype="multipart/form-data" method="post" id="frm_nueva_adopcion" novalidate>
+      {% csrf_token %}
+
+      <!-- Persona -->
+      <label for="persona">Persona:</label>
+      <select class="form-control" name="persona" id="persona" required>
+        <option value="">Seleccione persona</option>
+        {% for p in personas %}
+        <option value="{{ p.id_per }}">{{ p.nombre_per }} {{ p.apellido_per }}</option>
+        {% endfor %}
+      </select>
+      <small id="error_persona" class="text-danger"></small><br>
+
+      <!-- Mascota -->
+      <label for="mascota">Mascota:</label>
+      <select class="form-control" name="mascota" id="mascota" required>
+        <option value="">Seleccione mascota</option>
+        {% for m in mascotas %}
+        <option value="{{ m.id_mas }}">{{ m.nombre_mas }}</option>
+        {% endfor %}
+      </select>
+      <small id="error_mascota" class="text-danger"></small><br>
+
+      <!-- Fecha -->
+      <label for="fecha_ado">Fecha de Adopción:</label>
+      <input type="date" class="form-control" name="fecha_ado" id="fecha_ado" required>
+      <small id="error_fecha" class="text-danger"></small><br>
+
+      <!-- Documento -->
+      <label for="documento_ado">Documento (PDF, DOCX, JPG):</label>
+      <input type="file" name="documento_ado" id="documento_ado" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg" required>
+      <small id="error_documento" class="text-danger"></small><br>
+
+      <!-- Observación -->
+      <label for="observacion_ado">Observación:</label>
+      <textarea class="form-control" name="observacion_ado" id="observacion_ado" rows="3"
+        placeholder="Observaciones de la adopción..."></textarea><br>
+
+      <button class="btn btn-success w-100" type="submit">Guardar Adopción</button>
+      <a class="btn btn-outline-danger w-100 mt-2" href="/adopcion">Cancelar</a>
+    </form>
+  </div>
+  <div class="col-md-3"></div>
+</div>
+
+<!-- ============ VALIDACIONES FRONTEND ============ -->
+<script>
+  const form = document.getElementById("frm_nueva_adopcion");
+
+  form.addEventListener("submit", function (e) {
+    let valido = true;
+
+    // limpiar errores previos
+    document.querySelectorAll("small.text-danger").forEach(el => el.textContent = "");
+
+    const persona = document.getElementById("persona");
+    const mascota = document.getElementById("mascota");
+    const fecha = document.getElementById("fecha_ado");
+    const documento = document.getElementById("documento_ado");
+
+    // Validar selección de persona
+    if (persona.value === "") {
+      document.getElementById("error_persona").textContent = "Debe seleccionar una persona.";
+      valido = false;
+    }
+
+    // Validar selección de mascota
+    if (mascota.value === "") {
+      document.getElementById("error_mascota").textContent = "Debe seleccionar una mascota.";
+      valido = false;
+    }
+
+    // Validar fecha (no futura)
+    const hoy = new Date().toISOString().split("T")[0];
+    if (fecha.value === "") {
+      document.getElementById("error_fecha").textContent = "Debe seleccionar una fecha.";
+      valido = false;
+    } else if (fecha.value > hoy) {
+      document.getElementById("error_fecha").textContent = "La fecha no puede ser futura.";
+      valido = false;
+    }
+
+    // Validar documento
+    const file = documento.files[0];
+    if (!file) {
+      document.getElementById("error_documento").textContent = "Debe subir un documento.";
+      valido = false;
+    } else {
+      const extensionesPermitidas = ["pdf", "doc", "docx", "jpg", "jpeg"];
+      const extension = file.name.split(".").pop().toLowerCase();
+      if (!extensionesPermitidas.includes(extension)) {
+        document.getElementById("error_documento").textContent = "Formato no permitido.";
+        valido = false;
+      }
+    }
+
+    if (!valido) e.preventDefault();
+  });
+</script>
+
+<!-- Configuración del input de archivo -->
+<script>
+  $("#documento_ado").fileinput({
+    language: "es",
+    allowedFileExtensions: ["pdf", "jpg", "jpeg", "doc", "docx"],
+    showCaption: false,
+    dropZoneEnabled: true,
+    showClose: false
+  });
+</script>
+{% endblock %}
