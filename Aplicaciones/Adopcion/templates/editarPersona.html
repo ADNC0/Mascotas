@@ -4,9 +4,13 @@
   <div class="col-md-3"></div>
   <div class="col-md-6 bg-light p-4 rounded-3 shadow-sm">
     <h1 class="mb-4 text-center">Editar Persona</h1>
+<<<<<<< HEAD
 
     <form action="/procesarEdicionPersona/{{ personaEditar.id_per }}" 
           method="post" enctype="multipart/form-data" id="frm_editar_persona">
+=======
+<form action="{% url 'procesarEdicionPersona' personaEditar.id_per %}" method="post" enctype="multipart/form-data">
+>>>>>>> master
       {% csrf_token %}
 
       <label for="nombre_per">Nombre:</label>

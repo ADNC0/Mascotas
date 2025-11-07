@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 from django.db import models
 
 
@@ -14,6 +17,13 @@ class Persona(models.Model):
     def __str__(self):
         return f"{self.nombre_per} {self.apellido_per}"
 
+<<<<<<< HEAD
+=======
+    class Meta:
+        db_table = 'persona'
+        ordering = ['apellido_per']
+
+>>>>>>> master
 
 class Mascota(models.Model):
     id_mas = models.AutoField(primary_key=True)
@@ -27,12 +37,23 @@ class Mascota(models.Model):
     foto_mas = models.ImageField(upload_to='fotos_mascotas/', null=True, blank=True)
     historial_mas = models.TextField(null=True, blank=True)
     estado_mas = models.CharField(max_length=20)
+<<<<<<< HEAD
     fecha_registro_mas = models.DateField(auto_now_add=True)  
 
+=======
+    fecha_registro_mas = models.DateField(auto_now_add=True)
+>>>>>>> master
 
     def __str__(self):
         return self.nombre_mas
 
+<<<<<<< HEAD
+=======
+    class Meta:
+        db_table = 'mascota'
+        ordering = ['nombre_mas']
+
+>>>>>>> master
 
 class Adopcion(models.Model):
     id_ado = models.AutoField(primary_key=True)
@@ -44,3 +65,10 @@ class Adopcion(models.Model):
 
     def __str__(self):
         return f"Adopción de {self.mascota.nombre_mas} por {self.persona.nombre_per}"
+<<<<<<< HEAD
+=======
+
+    class Meta:
+        db_table = 'adopcion'
+        ordering = ['-fecha_ado']
+>>>>>>> master
