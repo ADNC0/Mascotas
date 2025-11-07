@@ -8,39 +8,57 @@
         <form action="/guardarPersona" enctype="multipart/form-data" method="post" id="frm_nueva_persona" novalidate>
             {% csrf_token %}
 
+<<<<<<< HEAD
             <!-- NOMBRE -->
+=======
+>>>>>>> master
             <label for="nombre_per">Nombre:</label>
             <input type="text" class="form-control" name="nombre_per" id="nombre_per"
                    placeholder="Ingrese el nombre" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
                    title="El nombre solo puede contener letras y espacios.">
             <small id="error_nombre" class="text-danger"></small><br>
 
+<<<<<<< HEAD
             <!-- APELLIDO -->
+=======
+>>>>>>> master
             <label for="apellido_per">Apellido:</label>
             <input type="text" class="form-control" name="apellido_per" id="apellido_per"
                    placeholder="Ingrese el apellido" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
                    title="El apellido solo puede contener letras y espacios.">
             <small id="error_apellido" class="text-danger"></small><br>
 
+<<<<<<< HEAD
             <!-- TELÉFONO -->
+=======
+>>>>>>> master
             <label for="telefono_per">Teléfono:</label>
             <input type="text" class="form-control" name="telefono_per" id="telefono_per"
                    placeholder="Ingrese el teléfono" required pattern="^[0-9]+$"
                    title="El teléfono solo puede contener números.">
             <small id="error_telefono" class="text-danger"></small><br>
 
+<<<<<<< HEAD
             <!-- CORREO -->
+=======
+>>>>>>> master
             <label for="correo_per">Correo:</label>
             <input type="email" class="form-control" name="correo_per" id="correo_per"
                    placeholder="Ingrese el correo electrónico" required>
             <small id="error_correo" class="text-danger"></small><br>
+<<<<<<< HEAD
 
             <!-- DIRECCIÓN -->
+=======
+>>>>>>> master
             <label for="direccion_per">Dirección:</label>
             <input type="text" class="form-control" name="direccion_per" id="direccion_per"
                    placeholder="Ingrese la dirección" required><br>
 
+<<<<<<< HEAD
             <!-- DOCUMENTO -->
+=======
+>>>>>>> master
             <label for="documento_per">Documento (PDF, DOCX, JPG):</label>
             <input type="file" name="documento_per" id="documento_per" class="form-control" required
                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"><br>
@@ -52,7 +70,10 @@
     <div class="col-md-3"></div>
 </div>
 
+<<<<<<< HEAD
 <!-- ============ VALIDACIÓN FRONTEND ============ -->
+=======
+>>>>>>> master
 <script>
     const form = document.getElementById("frm_nueva_persona");
 
@@ -64,38 +85,59 @@
         const telefono = document.getElementById("telefono_per");
         const correo = document.getElementById("correo_per");
 
+<<<<<<< HEAD
         // Limpiar mensajes previos
         document.querySelectorAll("small.text-danger").forEach(el => el.textContent = "");
 
         // Nombre solo letras
+=======
+        document.querySelectorAll("small.text-danger").forEach(el => el.textContent = "");
+
+>>>>>>> master
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(nombre.value)) {
             document.getElementById("error_nombre").textContent = "Solo se permiten letras.";
             valido = false;
         }
 
+<<<<<<< HEAD
         // Apellido solo letras
+=======
+>>>>>>> master
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(apellido.value)) {
             document.getElementById("error_apellido").textContent = "Solo se permiten letras.";
             valido = false;
         }
 
+<<<<<<< HEAD
         // Teléfono solo números
+=======
+>>>>>>> master
         if (!/^[0-9]+$/.test(telefono.value)) {
             document.getElementById("error_telefono").textContent = "Solo se permiten números.";
             valido = false;
         }
 
+<<<<<<< HEAD
         // Correo válido
+=======
+>>>>>>> master
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo.value)) {
             document.getElementById("error_correo").textContent = "Ingrese un correo válido.";
             valido = false;
         }
 
+<<<<<<< HEAD
         if (!valido) e.preventDefault(); // Evita enviar si hay errores
     });
 </script>
 
 <!-- Validación visual de archivos -->
+=======
+        if (!valido) e.preventDefault(); 
+    });
+</script>
+
+>>>>>>> master
 <script>
     $("#documento_per").fileinput({
         language: "es",

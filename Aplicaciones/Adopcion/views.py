@@ -3,9 +3,43 @@ from django.contrib import messages
 from django.db import IntegrityError
 from django.db.models import Count
 from .models import Persona, Mascota, Adopcion
+<<<<<<< HEAD
 
 
 # ===== PERSONA =====
+=======
+from django.db.models import Count, Avg
+
+def dashboard(request):
+    total_adopciones = Adopcion.objects.count()
+    total_personas = Persona.objects.count()
+    total_mascotas = Mascota.objects.count()
+
+    especies_adoptadas = Adopcion.objects.values('mascota__especie_mas').annotate(total=Count('id_ado')).order_by('-total')
+    especie_mas_adoptada = especies_adoptadas[0]['mascota__especie_mas'] if especies_adoptadas else 'Sin registros'
+
+    promedio_edad = Mascota.objects.filter(estado_mas__iexact='Adoptado').aggregate(promedio=Avg('edad_mas'))['promedio']
+    promedio_peso = Mascota.objects.filter(estado_mas__iexact='Adoptado').aggregate(promedio=Avg('peso_mas'))['promedio']
+
+    especies = Mascota.objects.values('especie_mas').annotate(total=Count('id_mas'))
+    labels = [e['especie_mas'] for e in especies]
+    data = [e['total'] for e in especies]
+
+    contexto = {
+        'total_adopciones': total_adopciones,
+        'total_personas': total_personas,
+        'total_mascotas': total_mascotas,
+        'especie_mas_adoptada': especie_mas_adoptada,
+        'promedio_edad': round(promedio_edad, 2) if promedio_edad else 0,
+        'promedio_peso': round(promedio_peso, 2) if promedio_peso else 0,
+        'labels': labels,
+        'data': data,
+    }
+
+    return render(request, 'dashboard.html', contexto)
+
+
+>>>>>>> master
 def persona(request):
     listado = Persona.objects.all()
     return render(request, "persona.html", {'personas': listado})
@@ -23,9 +57,14 @@ def guardarPersona(request):
     direccion = request.POST.get("direccion_per")
     documento = request.FILES.get("documento_per")
 
+<<<<<<< HEAD
     # ✅ Validar si el correo ya existe
     if Persona.objects.filter(correo_per=correo).exists():
         messages.error(request, "❌ El correo ingresado ya está registrado. Intente con otro.")
+=======
+    if Persona.objects.filter(correo_per=correo).exists():
+        messages.error(request, "El correo ingresado ya está registrado. Intente con otro.")
+>>>>>>> master
         return redirect('/nuevaPersona')
 
     try:
@@ -37,7 +76,11 @@ def guardarPersona(request):
             direccion_per=direccion,
             documento_per=documento
         )
+<<<<<<< HEAD
         messages.success(request, "✅ Persona guardada exitosamente")
+=======
+        messages.success(request, "Persona guardada exitosamente")
+>>>>>>> master
     except IntegrityError:
         messages.error(request, "Ocurrió un error al guardar la persona. Verifique los datos.")
     return redirect('/persona')
@@ -62,13 +105,23 @@ def procesarEdicionPersona(request, id):
     persona.telefono_per = request.POST.get("telefono_per")
     persona.correo_per = request.POST["correo_per"]
     persona.direccion_per = request.POST.get("direccion_per")
+<<<<<<< HEAD
     persona.documento_per = request.FILES.get("documento_per", persona.documento_per)
+=======
+
+    if "documento_per" in request.FILES:
+        persona.documento_per = request.FILES["documento_per"]
+
+>>>>>>> master
     persona.save()
     messages.success(request, "Persona actualizada exitosamente")
     return redirect('/persona')
 
 
+<<<<<<< HEAD
 # ===== MASCOTA =====
+=======
+>>>>>>> master
 def mascota(request):
     listado = Mascota.objects.all()
     return render(request, "mascota.html", {'mascotas': listado})
@@ -124,7 +177,10 @@ def procesarEdicionMascota(request, id):
     return redirect('/mascota')
 
 
+<<<<<<< HEAD
 # ===== ADOPCION =====
+=======
+>>>>>>> master
 def adopcion(request):
     listado = Adopcion.objects.select_related('persona', 'mascota')
     return render(request, "adopcion.html", {'adopciones': listado})

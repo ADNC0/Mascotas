@@ -2,6 +2,12 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+<<<<<<< HEAD
+=======
+
+    path('dashboard/', views.dashboard, name='dashboard'),
+
+>>>>>>> master
     # PERSONAS
     path('', views.persona),
     path('persona', views.persona),
@@ -9,7 +15,12 @@ urlpatterns = [
     path('guardarPersona', views.guardarPersona),
     path('eliminarPersona/<id>', views.eliminarPersona),
     path('editarPersona/<id>', views.editarPersona),
+<<<<<<< HEAD
     path('procesarEdicionPersona/<id>', views.procesarEdicionPersona),
+=======
+    path('procesarEdicionPersona/<int:id>/', views.procesarEdicionPersona, name='procesarEdicionPersona'),
+
+>>>>>>> master
 
     # MASCOTAS
     path('mascota', views.mascota),

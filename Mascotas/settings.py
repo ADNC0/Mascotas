@@ -76,8 +76,17 @@ WSGI_APPLICATION = 'Mascotas.wsgi.application'
 
 DATABASES = {
     'default': {
+<<<<<<< HEAD
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': 'db.mascotas.db',
+=======
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mascota',       
+        'USER': 'postgres',           
+        'PASSWORD': 'dalien2003',    
+        'HOST': 'localhost',               
+        'PORT': '5432',                    
+>>>>>>> master
     }
 }
 
@@ -128,4 +137,8 @@ if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Configuración de la carpeta para subir archivos dinámicos 
 MEDIA_URL = '/media/'
+<<<<<<< HEAD
 MEDIA_ROOT = os.path.join(BASE_DIR, 'Macotas/media')
+=======
+MEDIA_ROOT = os.path.join(BASE_DIR, 'Mascotas/media')
+>>>>>>> master
